@@ -4,21 +4,38 @@
       <div class="col-sm-10">
         <h1>Eleves</h1>
         <hr><br><br>
+        <h3> Totale : {{ students.length }}</h3>
+        <h3> moyenne_de_la_classe : {{getMoy()}} </h3>
+        <br>
+
+        <b-form @submit="onFind" class="w-100">
+          <b-form-group id="form-title-group"
+                        label-for="form-title-input">
+              <b-form-input id="form-title-input"
+                            type="text"
+                            v-model="nameToFind"
+                            required
+                            placeholder="chercher un nom"
+                            @change="onClear">
+              </b-form-input>
+            </b-form-group>
+            <b-button type="submit" variant="primary">Find</b-button>
+          </b-form>
+
+        <br>
         <alert :message=message v-if="showMessage"></alert>
-        <p> Totale : {{ students.length }}</p>
-        <br><br>
-        <p> la moyenne : {{ students.length }}</p>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal> Ajouté un eleve</button>
+        <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal> Ajouter un éleve</button>
         <br><br>
         <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col">Prenom</th>
               <th scope="col">Nom</th>
-              <th scope="col">Date de naissance</th>
-              <th scope="col">Note 1</th>
-              <th scope="col">Note 2</th>
-              <th scope="col">Note 3</th>
+              <th scope="col">Date_de_naissance</th>
+              <th scope="col">Note_1</th>
+              <th scope="col">Note_2</th>
+              <th scope="col">Note_3</th>
+              <th scope="col">Moyenne/trimestre</th>
               <th></th>
             </tr>
           </thead>
@@ -32,6 +49,7 @@
               <td>{{ student.mark_1 }}</td>
               <td>{{ student.mark_2 }}</td>
               <td>{{ student.mark_3 }}</td>
+              <td>{{ Math.round((student.mark_1+student.mark_2+student.mark_3)/3) }}</td>
 
               <td>
                 <div class="btn-group" role="group">
@@ -51,6 +69,9 @@
                 </div>
               </td>
             </tr>
+          <hr><br><br>
+          <!-- <input v-model="newComment" v-on:keyup.enter="addComment" placeholder="Ajouter en commentaire"> -->
+        <hr><br><br>
 
           </tbody>
         </table>
@@ -58,7 +79,7 @@
     </div>
     <b-modal ref="addStudentModal"
             id="book-modal"
-            title="Ajouté un nouveau éleve "
+            title="Ajouter un nouveau éleve "
             hide-footer>
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
       <b-form-group id="form-title-group"
@@ -86,7 +107,7 @@
                     label="Date de Naissance:"
                     label-for="form-title-input">
           <b-form-input id="form-title-input"
-                        type="text"
+                        type="date"
                         v-model="addStudentForm.birthDate"
                         required
                         placeholder="01/02/1990">
@@ -119,7 +140,7 @@
                         type="text"
                         v-model="addStudentForm.mark_3"
                         required
-                        placeholder="57">
+                        placeholder="10">
           </b-form-input>
         </b-form-group>
 
@@ -141,7 +162,7 @@
                         type="text"
                         v-model="editForm.prenom"
                         required
-                        placeholder="Enter title">
+                        placeholder="">
           </b-form-input>
         </b-form-group>
         <b-form-group id="form-author-edit-group"
@@ -151,17 +172,17 @@
                           type="text"
                           v-model="editForm.nom"
                           required
-                          placeholder="Enter author">
+                          placeholder="">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-author-edit-group"
                       label="Date De Naissance:"
                       label-for="form-author-edit-input">
             <b-form-input id="form-author-edit-input"
-                          type="text"
+                          type="date"
                           v-model="editForm.birthDate"
                           required
-                          placeholder="Enter author">
+                          placeholder="date">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-author-edit-group"
@@ -171,7 +192,7 @@
                           type="text"
                           v-model="editForm.mark_1"
                           required
-                          placeholder="Enter author">
+                          placeholder="">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-author-edit-group"
@@ -181,7 +202,7 @@
                           type="text"
                           v-model="editForm.mark_2"
                           required
-                          placeholder="Enter author">
+                          placeholder="">
             </b-form-input>
           </b-form-group>
           <b-form-group id="form-author-edit-group"
@@ -191,10 +212,10 @@
                           type="text"
                           v-model="editForm.mark_3"
                           required
-                          placeholder="Enter author">
+                          placeholder="">
             </b-form-input>
           </b-form-group>
-        
+
         <b-button-group>
           <b-button type="submit" variant="primary">Update</b-button>
           <b-button type="reset" variant="danger">Cancel</b-button>
@@ -207,17 +228,18 @@
 
 
 <script>
-
 import axios from 'axios';
 import Alert from './Alert.vue';
 
 export default {
 
   data() {
-    return {
+   
+   return {
       students: [],
       message: '',
       showMessage: false,      
+      nameToFind:'',
 
       addStudentForm: {
         prenom: '',
@@ -240,6 +262,7 @@ export default {
 
     };
   },
+
   components: {
     alert: Alert,
   },
@@ -255,6 +278,30 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
+
+    },
+
+    getStudentByName(nameID){
+      const path = `http://localhost:5000/search/${nameID}`;
+      axios.get(path)
+          .then((res)=>{
+            console.log(res.data)
+             this.students = JSON.parse(res.data);
+          })
+          .catch((error) => {
+          // eslint-disable-next-line
+          
+          console.error(error);
+        });
+
+    },
+
+    getMoy(){
+      let sum = 0;
+      this.students.forEach(student => {
+        sum += (student.mark_1+student.mark_2+student.mark_3)/3;
+      });
+      return Math.round(sum/this.students.length);
     },
     addStudent(payload) {
       const path = 'http://localhost:5000/insert';
@@ -286,7 +333,23 @@ export default {
       this.editForm.mark_1 = '';
       this.editForm.mark_2 = '';
       this.editForm.mark_3 = '';
+
+      this.nameToFind='';
     },
+    onClear(evt){
+      if( this.nameToFind === "")
+         this.getStudents();
+
+    },
+
+    onFind(evt) {
+      evt.preventDefault();
+      this.$refs.addStudentModal.hide();
+      let nom =  this.nameToFind;
+
+      this.getStudentByName(nom);
+    },
+
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addStudentModal.hide();
@@ -311,7 +374,7 @@ export default {
       this.$refs.addStudentModal.hide();
       this.initForm();
     },
-    editstudent(student) {
+    editStudent(student) {
       this.editForm = student;
     },
 
@@ -328,16 +391,17 @@ export default {
         mark_2: this.editForm.mark_2,
         mark_3: this.editForm.mark_3
          };
-      console.log("this is the id"+this.editForm.id)
       this.updateStudent(payload, this.editForm.id);
     },
 
     updateStudent(payload, StudentID) {
       const path = `http://localhost:5000/update/${StudentID}`;
+        
       axios.post(path, payload)
+
         .then(() => {
           this.getStudents();
-          this.message = 'Eleve modifie !';
+          this.message = 'Eleve modifié !';
           this.showMessage = true;
         })
         .catch((error) => {
