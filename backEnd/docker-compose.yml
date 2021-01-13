@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+  server:
+    build: .
+    ports:
+        - 5000:5000
+    depends_on:
+      - db    
+    
+    networks:
+      vpcbr:
+         ipv4_address: 172.19.0.2
+
+  db:
+    build: db
+    restart: always
+    ports:
+        - 3306:3306
+    networks:
+      vpcbr:
+         ipv4_address: 172.19.0.3    
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    
+    depends_on : 
+      - db  
+    networks:
+      vpcbr:
+         ipv4_address: 172.19.0.4  
+
+  
+# create network to put your proper subnet with the gateway 
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.19.0.0/16
+         gateway: 172.19.0.1
