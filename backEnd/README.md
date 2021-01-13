@@ -1,17 +1,7 @@
 # test-rivalis-web
 
-to install 
-
-pip install -r requirements.txt
-
 
 ### Test Python Marouane
-###Environnement : Python 3 / Vue.Js
-
-Date du test : 11/01/2021 13h
-Date limite d’envoi des sources : 13/01/2021 10h
-Email de réception des sources : keran@rivalis.fr (joindre dump)
-
 
 ##Contexte : 
 

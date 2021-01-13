@@ -25,7 +25,6 @@ CORS(app)
                         
  
 Base.metadata.create_all(engine)
-
  
 # Create a session
 Session = sqlalchemy.orm.sessionmaker()
@@ -119,6 +118,15 @@ async def delete(request , id ):
         return redirect(url)
 
 
+@app.route('/search/<NameID>', methods = ['GET'])
+async def FindByName(request , NameID ):
+    #    check if user exists 
+
+        student_ = session.query(student).filter(student.nom == NameID)
+        json_object = json.dumps([student.serialize(m) for m in student_] ,  separators=(',' , ':'))  
+        # print("student found is //////",json_object)
+
+        return response.json(json_object)
   
 
 if __name__ == '__main__':
