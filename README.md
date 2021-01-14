@@ -35,6 +35,6 @@ Navigate to http://localhost:8080
 # Final app:
 
 
-![alt text](Screenshot from 2021-01-14 14-51-05.png)
+![alt text](app.png)
 
 
