@@ -12,11 +12,11 @@ we created a Vue application with the Vue CLI and then move on to performing the
 Run the server-side Flask app in one terminal window:
 
 ```
-$ cd server
+$ cd backEnd
 $ python3.7 -m venv env
 $ source env/bin/activate
 (env)$ pip install -r requirements.txt
-(env)$ python app.py
+(env)$ python manage.py
 ```
 
 Navigate to http://localhost:5000
