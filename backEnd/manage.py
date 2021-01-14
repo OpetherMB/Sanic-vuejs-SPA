@@ -9,7 +9,7 @@ from sanic_cors import CORS, cross_origin
 CORS()
 
 # locals
-from app.models.student import student, engine , Base
+from models.student import student, engine , Base
 
 
 # create the web app
