@@ -3,13 +3,12 @@ DEBUG = True
 
 
 DATABASE = {
-    'host': 'localhost',
-    'user': 'student0',
+    'host': '192.168.99.100',
+    'user': 'root',
     'port': '3306',
-    'password': 'Maro@1270',
-    'database': 'sqlalchemy'
+    'password': 'ok@1270',
+    'database': 'studentsDb'
 }
-
 
 PORT = 5000
 SECRET = 'rivalis-10'

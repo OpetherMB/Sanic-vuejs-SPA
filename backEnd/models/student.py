@@ -45,7 +45,6 @@ class student(Base , Serializer):
 
 # Define the MySQL engine using MySQL Connector/Python
 
-# TODO change this to private variable 
 engine = sqlalchemy.create_engine(
                              'mysql+mysqlconnector://{0}:{1}@{2}:{3}/{4}'.format(config.DATABASE['user'], 
                                                                                 config.DATABASE['password'],

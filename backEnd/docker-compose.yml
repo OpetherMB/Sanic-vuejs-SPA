@@ -8,18 +8,19 @@ services:
     depends_on:
       - db    
     
-    networks:
-      vpcbr:
-         ipv4_address: 172.19.0.2
+    # networks:
+    #   vpcbr:
+    #      ipv4_address: 172.19.0.2
 
   db:
     build: db
     restart: always
     ports:
         - 3306:3306
-    networks:
-      vpcbr:
-         ipv4_address: 172.19.0.3    
+        
+    # networks:
+    #   vpcbr:
+    #      ipv4_address: 172.19.0.3    
 
   adminer:
     image: adminer
@@ -29,16 +30,21 @@ services:
     
     depends_on : 
       - db  
-    networks:
-      vpcbr:
-         ipv4_address: 172.19.0.4  
+
+
+
+# this is for ip conflict i have on my personal ubuntu pc
+
+#     networks:
+#       vpcbr:
+#          ipv4_address: 172.19.0.4  
 
   
-# create network to put your proper subnet with the gateway 
-networks:
-  vpcbr:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 172.19.0.0/16
-         gateway: 172.19.0.1
+# # create network to put your proper subnet with the gateway 
+# networks:
+#   vpcbr:
+#     driver: bridge
+#     ipam:
+#      config:
+#        - subnet: 172.19.0.0/16
+#          gateway: 172.19.0.1

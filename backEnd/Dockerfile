@@ -5,10 +5,11 @@ FROM python:3.7.2-stretch
 WORKDIR /app  
 
 # Copy the current directory contents into the container at /app 
-COPY manage.py .
-COPY  config.py .
+ADD  . .
+
 
 # Install the dependencies
-RUN pip install  sanic && pip install SQLAlchemy && pip install mysql-connector-python
+RUN pip install -r requirements.txt
 
+# Run
 CMD [ "python3","./manage.py" ]
