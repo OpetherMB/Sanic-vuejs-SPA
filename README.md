@@ -19,7 +19,8 @@ $ source env/bin/activate
 (env)$ python manage.py
 ```
 
-### in case of eror while installing requirements try :  ```pip install -U setuptools pip``` 
+### in case of eror while installing requirements try :  
+``` pip install -U setuptools pip ``` 
 
 Navigate to http://localhost:5000
 
