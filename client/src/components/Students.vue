@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div class="container">
     <div class="row">
       <div class="col-sm-10">
@@ -7,7 +8,6 @@
         <h3> Totale : {{ students.length }}</h3>
         <h3> moyenne_de_la_classe : {{getMoy()}} </h3>
         <br>
-
         <b-form @submit="onFind" class="w-100">
           <b-form-group id="form-title-group"
                         label-for="form-title-input">
@@ -21,28 +21,24 @@
             </b-form-group>
             <b-button type="submit" variant="primary">Find</b-button>
           </b-form>
-
-        <br>
-        <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal> Ajouter un éleve</button>
-        <br><br>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Prenom</th>
-              <th scope="col">Nom</th>
-              <th scope="col">Date_de_naissance</th>
-              <th scope="col">Note_1</th>
-              <th scope="col">Note_2</th>
-              <th scope="col">Note_3</th>
-              <th scope="col">Moyenne/trimestre</th>
-              <th></th>
-            </tr>
+            <br>
+            <alert :message=message v-if="showMessage"></alert>
+            <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal> Ajouter un éleve</button>
+            <br><br>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Prenom</th>
+                  <th scope="col">Nom</th>
+                  <th scope="col">Date_de_naissance</th>
+                  <th scope="col">Note_1</th>
+                  <th scope="col">Note_2</th>
+                  <th scope="col">Note_3</th>
+                  <th scope="col">Moyenne/trimestre</th>
+              </tr>
           </thead>
           <tbody>
-           
             <tr v-for="(student, index) in students" :key="index">
-
               <td>{{ student.prenom }}</td>
               <td>{{ student.nom }}</td>
               <td>{{ student.birthDate }}</td>
@@ -50,7 +46,6 @@
               <td>{{ student.mark_2 }}</td>
               <td>{{ student.mark_3 }}</td>
               <td>{{ Math.round((student.mark_1+student.mark_2+student.mark_3)/3) }}</td>
-
               <td>
                 <div class="btn-group" role="group">
                   <button
@@ -70,9 +65,6 @@
               </td>
             </tr>
           <hr><br><br>
-          <!-- <input v-model="newComment" v-on:keyup.enter="addComment" placeholder="Ajouter en commentaire"> -->
-        <hr><br><br>
-
           </tbody>
         </table>
       </div>
@@ -226,7 +218,6 @@
 </template>
 
 
-
 <script>
 import axios from 'axios';
 import Alert from './Alert.vue';
@@ -234,20 +225,19 @@ import Alert from './Alert.vue';
 export default {
 
   data() {
-   
-   return {
+    return {
       students: [],
       message: '',
-      showMessage: false,      
-      nameToFind:'',
+      showMessage: false,
+      nameToFind: '',
 
       addStudentForm: {
         prenom: '',
         nom: '',
         birthDate: '',
-        mark_1:'',
-        mark_2:'',
-        mark_3:''
+        mark_1: '',
+        mark_2: '',
+        mark_3: '',
       },
 
       editForm: {
@@ -256,8 +246,8 @@ export default {
         nom: '',
         birthDate: '',
         mark_1: '',
-        mark_2:'',
-        mark_3:''
+        mark_2: '',
+        mark_3: '',
       },
 
     };
@@ -278,30 +268,30 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
-
     },
 
-    getStudentByName(nameID){
+    getStudentByName(nameID) {
       const path = `http://localhost:5000/search/${nameID}`;
       axios.get(path)
-          .then((res)=>{
-            console.log(res.data)
-             this.students = JSON.parse(res.data);
-          })
-          .catch((error) => {
+        .then((res) => {
+          // console.log(res.data);
+          this.students = JSON.parse(res.data);
+          this.message = ` ${nameID} existe !`;
+          this.showMessage = true;
+        })
+        .catch((error) => {
           // eslint-disable-next-line
           
           console.error(error);
         });
-
     },
 
-    getMoy(){
+    getMoy() {
       let sum = 0;
-      this.students.forEach(student => {
-        sum += (student.mark_1+student.mark_2+student.mark_3)/3;
+      this.students.forEach((student) => {
+        sum += (student.mark_1 + student.mark_2 + student.mark_3) / 3;
       });
-      return Math.round(sum/this.students.length);
+      return Math.round(sum / this.students.length);
     },
     addStudent(payload) {
       const path = 'http://localhost:5000/insert';
@@ -318,14 +308,13 @@ export default {
         });
     },
     initForm() {
-      
       this.addStudentForm.prenom = '';
       this.addStudentForm.nom = '';
       this.addStudentForm.birthDate = '';
       this.addStudentForm.mark_1 = '';
       this.addStudentForm.mark_2 = '';
-      this.addStudentForm.mark_3 = '';            
-      
+      this.addStudentForm.mark_3 = '';
+
       this.editForm.id = '';
       this.editForm.prenom = '';
       this.editForm.nom = '';
@@ -334,37 +323,33 @@ export default {
       this.editForm.mark_2 = '';
       this.editForm.mark_3 = '';
 
-      this.nameToFind='';
+      this.nameToFind = '';
     },
-    onClear(evt){
-      if( this.nameToFind === "")
-         this.getStudents();
-
+    onClear() {
+      if (this.nameToFind === '') this.getStudents();
+      // delete message after the clear event
+      this.showMessage = false;
     },
 
     onFind(evt) {
       evt.preventDefault();
       this.$refs.addStudentModal.hide();
-      let nom =  this.nameToFind;
-
+      const nom = this.nameToFind;
       this.getStudentByName(nom);
     },
 
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addStudentModal.hide();
-      // let read = false;
-      // if (this.addStudentForm.read[0]) read = true;
+
       const payload = {
-        
+
         prenom: this.addStudentForm.prenom,
         nom: this.addStudentForm.nom,
         birthDate: this.addStudentForm.birthDate,
         mark_1: this.addStudentForm.mark_1,
         mark_2: this.addStudentForm.mark_2,
-        mark_3: this.addStudentForm.mark_3
-        
-        // read, // property shorthand
+        mark_3: this.addStudentForm.mark_3,
       };
       this.addStudent(payload);
       this.initForm();
@@ -381,22 +366,21 @@ export default {
     onSubmitUpdate(evt) {
       evt.preventDefault();
       this.$refs.editStudentModal.hide();
-      // let read = false;
-      // if (this.editForm.read[0]) read = true;
+
       const payload = {
         prenom: this.editForm.prenom,
         nom: this.editForm.nom,
         birthDate: this.editForm.birthDate,
         mark_1: this.editForm.mark_1,
         mark_2: this.editForm.mark_2,
-        mark_3: this.editForm.mark_3
-         };
+        mark_3: this.editForm.mark_3,
+      };
       this.updateStudent(payload, this.editForm.id);
     },
 
     updateStudent(payload, StudentID) {
       const path = `http://localhost:5000/update/${StudentID}`;
-        
+
       axios.post(path, payload)
 
         .then(() => {
@@ -414,7 +398,7 @@ export default {
       evt.preventDefault();
       this.$refs.editStudentModal.hide();
       this.initForm();
-      this.getStudents(); // why?
+      this.getStudents();
     },
 
 

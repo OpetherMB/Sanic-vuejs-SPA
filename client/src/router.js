@@ -13,6 +13,6 @@ export default new Router({
       name: 'Students',
       component: Students,
     },
-    
+
   ],
 });
