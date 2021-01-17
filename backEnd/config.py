@@ -1,6 +1,7 @@
 
 DEBUG = True
 
+# This is for database
 
 DATABASE = {
     'host': '192.168.99.100',
@@ -10,6 +11,7 @@ DATABASE = {
     'database': 'studentsDb'
 }
 
+#this is for web app
 PORT = 5000
 SECRET = 'rivalis-10'
 WORKERS = 1 
